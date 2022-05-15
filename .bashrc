@@ -15,7 +15,7 @@ start_hour=`date +"%-H"`
 start_minute=`date +"%-M"`
 
 if [ $name == nnn ]; then
-        clear
+	clear
 else
 
 echo ""
@@ -31,38 +31,38 @@ clear
 
 if [ $pass == 817nk ]; then
 
-        if [ -z "$dir" ]; then
-                z 817nk
-        else
-            z $dir
-        fi
-        if [ -z "$opt" ]; then
-                :
-        elif [ $opt == code ]; then
-                code .
-        elif [ $opt == term ]; then
-            wt.exe -w 0 split-pane -p "ubuntu" ubuntu.exe
-        elif [ $opt == vim ]; then
-                nvim
-        elif [ $opt == pwsh ]; then
-                wt.exe -w 0 split-pane -p "powershell" pwsh.exe
-        else
-                :
+	if [ -z "$dir" ]; then
+		z 817nk
+	else
+	    z $dir
+	fi
+	if [ -z "$opt" ]; then
+		:
+	elif [ $opt == code ]; then
+		code .
+	elif [ $opt == term ]; then
+	    wt.exe -w 0 split-pane -p "ubuntu" ubuntu.exe
+	elif [ $opt == vim ]; then
+		nvim
+	elif [ $opt == pwsh ]; then
+		wt.exe -w 0 split-pane -p "powershell" pwsh.exe
+	else
+		:
+		
+	fi
 
-        fi
-
-        date +"%Y/%m/%d in Tokyo"
-        echo ""
-        neofetch
-        echo ""
-        echo " Note"
-        cat /mnt/c/Users/817nk/task.txt
-
+	date +"%Y/%m/%d in Tokyo"
+	echo ""
+	neofetch
+	echo ""
+	echo " Note"
+	cat /mnt/c/Users/817nk/task.txt
+		
 else
-        echo ""
-        echo -e "\e[31mERROR: INVALID PASSWORD\e[m"
-        sleep 3
-        exit
+	echo ""
+	echo -e "\e[31mERROR: INVALID PASSWORD\e[m"
+	sleep 3
+	exit
 fi
 fi
 
@@ -115,12 +115,12 @@ esac
 
 if [ -n "$force_color_prompt" ]; then
     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-        # We have color support; assume it's compliant with Ecma-48
-        # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-        # a case would tend to support setf rather than setaf.)
-        color_prompt=yes
+	# We have color support; assume it's compliant with Ecma-48
+	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+	# a case would tend to support setf rather than setaf.)
+	color_prompt=yes
     else
-        color_prompt=
+	color_prompt=
     fi
 fi
 
@@ -132,7 +132,7 @@ parse_git_branch() {
 if [ "$color_prompt" = yes ]; then
     #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;35m\]\u@\h\[\033[00m\]:\[\033[01;36m\]\w\n\[\033[00m\]\$ '
     PS1="\n\[\033[01;36m\]pwd: \[\033[01;36m\]\w\[\033[35m\]\$(parse_git_branch) \[\033[00m\]【\t】\n\[\033[00m\]cmd: "
-        else
+	else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
 unset color_prompt force_color_prompt
@@ -167,7 +167,7 @@ alias la='ls -A'
 alias l='ls -CF'
 
 # another aliases
-alias open='xdg-open'
+alias open='explorer.exe .'
 alias vim='nvim'
 alias term='wt.exe -w 0 split-pane -p "ubuntu" ubuntu.exe'
 alias pwsh='wt.exe -w 0 split-pane -p "powershell" pwsh.exe'
@@ -219,48 +219,48 @@ echo "s: show differences and reset"
 read -p "Press key: " inp
 
 if [ -z "$inp" ]; then
-        echo "Quit."
+	echo "Quit."
 
 elif [ $inp == f ]; then
 
 read -p "Fetch from github? (y/N): " fetch
-        if [ $fetch == "y" ]; then
-                git fetch origin ${CULLENT_BRANCH};
-                git status
-                git tree
+	if [ $fetch == "y" ]; then
+		git fetch origin ${CULLENT_BRANCH};
+		git status
+		git tree
+		
+		read -p "Merge it? (y/N): " merge
 
-                read -p "Merge it? (y/N): " merge
-
-                if [ $merge == "y" ]; then
-                        git merge origin/${CULLENT_BRANCH}
-                else
-                        :
-                fi
-        else
-                exit 0
-        fi
+		if [ $merge == "y" ]; then
+			git merge origin/${CULLENT_BRANCH}
+		else
+			:
+		fi
+	else
+		exit 0
+	fi
 elif [ $inp == p ]; then
 
-        read -p "Enter File Name to add: " addname
-        if [ -z "$addname" ]; then
-                git add .
-        else
-                git add $addname;
-        fi
+	read -p "Enter File Name to add: " addname
+	if [ -z "$addname" ]; then
+		git add .
+	else
+		git add $addname;
+	fi
     git status;
     read -p "Commit with this Content? (y/N): " yesno
     case "$yesno" in
 
     [yY]*) read -p "Input Commit Message: " msg;
-                if [ -z $msg ]; then
-                        git commit -m "`date +"%m%d"`"
+		if [ -z $msg ]; then
+			git commit -m "`date +"%m%d"`"
             CULLENT_BRANCH=`git rev-parse --abbrev-ref HEAD`;
             git push origin ${CULLENT_BRANCH};
-                else
-                        git commit -m "`date +"%m%d"`""_""$msg";
-                        CULLENT_BRANCH=`git rev-parse --abbrev-ref HEAD`;
-                        git push origin ${CULLENT_BRANCH};
-                fi;;
+		else
+			git commit -m "`date +"%m%d"`""_""$msg";
+			CULLENT_BRANCH=`git rev-parse --abbrev-ref HEAD`;
+			git push origin ${CULLENT_BRANCH};
+		fi;;
     *) echo "Quit." ;;
     esac
 
@@ -270,39 +270,39 @@ read -p "Make a new repository? (y/N): " yn
 
 if [ $yn == y ]; then
 
-        read -p "Input Repository Name: " rep
-        read -p "Input Commit Message: " msg
-        read -p "Input Branch Name: " name
+	read -p "Input Repository Name: " rep 
+	read -p "Input Commit Message: " msg
+	read -p "Input Branch Name: " name
 
-        echo "# $rep" >> README.md
-        git init
-        git add README.md
-        git commit -m "$msg"
-        git branch -M $name
-        git remote add origin git@github.com:nt-718/$rep.git
-        git push -u origin $name
+	echo "# $rep" >> README.md	
+	git init
+	git add README.md
+	git commit -m "$msg"
+	git branch -M $name
+	git remote add origin git@github.com:nt-718/$rep.git
+	git push -u origin $name
 
 else
-        echo "Quit. "
+	echo "Quit. "
 fi
 elif [ $inp == s ]; then
 
-        git log --pretty=oneline
-        echo ""
-        read -p "Enter Message: " cmt
-        show=`git log --pretty=oneline --grep=$cmt | awk '{print $1}'`
-        echo ""
-        git show $show
-        echo ""
-        read -p "Reset the commit? (y/N): " rst
-        if [ $rst == y ]; then
-                git reset --hard $show
-        else
-                echo "Quit. "
-        fi
+	git log --pretty=oneline
+	echo ""
+	read -p "Enter Message: " cmt
+	show=`git log --pretty=oneline --grep=$cmt | awk '{print $1}'`
+	echo ""
+	git show $show | bat -l rs
+	echo ""
+	read -p "Reset the commit? (y/N): " rst
+	if [ $rst == y ]; then
+		git reset --hard $show
+	else
+		echo "Quit. "
+	fi
 
 else
-        :
+	:
 fi
 }
 
@@ -311,11 +311,11 @@ Exit() {
 end_hour=`date +"%-H"`
 end_minute=`date +"%-M"`
 if [ $end_minute -lt $start_minute ]; then
-        hour=$((end_hour-start_hour -1))
-        minute=$((end_minute-start_minute +60))
+	hour=$((end_hour-start_hour -1))
+	minute=$((end_minute-start_minute +60))
 else
-        hour=$((end_hour-start_hour))
-        minute=$((end_minute-start_minute))
+	hour=$((end_hour-start_hour))
+	minute=$((end_minute-start_minute))
 fi
 
 echo "$hour hours and $minute minutes has passed!"
@@ -324,14 +324,14 @@ echo ""
 
 read -p "Make a Todo List? (y/N): " td
 if [ $td == y ]; then
-        bash /mnt/c/Users/817nk/task.sh
-        read -p "Press enter key to exit." ntr
-        sleep 2
-        exit
+	bash /mnt/c/Users/817nk/task.sh
+	read -p "Press enter key to exit." ntr
+	sleep 2
+	exit
 else
-        read -p "Press enter key to exit." ntr
-        sleep 2
-        exit
+	read -p "Press enter key to exit." ntr
+	sleep 2
+	exit
 fi
 
 }
@@ -340,13 +340,22 @@ WH() {
 end_hour=`date +"%-H"`
 end_minute=`date +"%-M"`
 if [ $end_minute -lt $start_minute ]; then
-        hour=$((end_hour-start_hour -1))
-        minute=$((end_minute-start_minute +60))
+	hour=$((end_hour-start_hour -1))
+	minute=$((end_minute-start_minute +60))
 else
-        hour=$((end_hour-start_hour))
-        minute=$((end_minute-start_minute))
+	hour=$((end_hour-start_hour))
+	minute=$((end_minute-start_minute))
 fi
 
 echo "You are working for $hour hours and $minute minutes now."
 
+}
+
+eval "$(gh completion -s bash)"
+
+hello() {
+	echo "Hello $name!"
+	sleep 1
+	echo "What's up?"
+	read action
 }
