@@ -6,6 +6,13 @@ echo ""
 echo "Hello, Terminal!"
 echo ""
 
+hr() {
+  local start=$'\e(0' end=$'\e(B' line='qqqqqqqqqqqqqqqq'
+  local cols=${COLUMNS:-$(tput cols)}
+  while ((${#line} < cols)); do line+="$line"; done
+  printf '%s%s%s\n' "$start" "${line:0:cols}" "$end"
+}
+
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 . ~/z/z.sh
 
@@ -124,14 +131,28 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-parse_git_branch() {
-     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
-}
+# parse_git_branch() {
+#     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+# }
+
+if [ -f ~/.git-completion.bash ]; then
+    source ~/.git-completion.bash
+fi
+if [ -f ~/.git-prompt.sh ]; then
+    source ~/.git-prompt.sh
+fi
+GIT_PS1_SHOWDIRTYSTATE=true
+GIT_PS1_SHOWUNTRACKEDFILES=true
+GIT_PS1_SHOWSTASHSTATE=true
+#GIT_PS1_SHOWCOLORHINTS=true
+#GIT_PS1_SHOWUPSTREAM=auto
+
 #export PS1="\u@\h \[\033[32m\]\w\[\033[33m\]\$(parse_git_branch)\[\033[00m\] $ "
 
 if [ "$color_prompt" = yes ]; then
     #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;35m\]\u@\h\[\033[00m\]:\[\033[01;36m\]\w\n\[\033[00m\]\$ '
-    PS1="\n\[\033[01;36m\]pwd: \[\033[01;36m\]\w\[\033[35m\]\$(parse_git_branch) \[\033[00m\]【\t】\n\[\033[00m\]cmd: "
+    PS1="`hr`\n\[\033[01;36m\]pwd: \[\033[01;36m\]\w\[\033[34m\]\$(__git_ps1) \[\033[00m\]【\t】\n\[\033[00m\]cmd: "
+
 	else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
@@ -178,10 +199,15 @@ alias backup='bash /mnt/c/Users/817nk/backup.sh'
 alias cl='clear'
 alias rmd='rm -rf'
 alias g='git'
-alias dc='z'
 alias weather='curl wttr.in/Tokyo'
 alias moon='curl wttr.in/Moon'
 alias line='/mnt/c/Users/817nk/AppData/Local/LINE/bin/LineLauncher.exe'
+alias rails='/home/nkgw817/.rbenv/shims/rails'
+alias os='cat /etc/os-release'
+alias d='docker'
+alias dc='docker-compose'
+alias dcup='docker-compose up -d --build'
+alias dcbd='docker-compose build --no-cache'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -212,11 +238,14 @@ fi
 
 Git() {
 echo -e "\e[31m Git Menu\e[m"
+hr
 echo "f: fetch and merge"
 echo "p: add, commit and push"
 echo "r: make a new repository"
 echo "s: show differences and reset"
+hr
 read -p "Press key: " inp
+echo ""
 
 if [ -z "$inp" ]; then
 	echo "Quit."
@@ -270,10 +299,35 @@ read -p "Make a new repository? (y/N): " yn
 
 if [ $yn == y ]; then
 
-	read -p "Input Repository Name: " rep 
+	read -p "Input Repository Name: " rep
+	echo "Visibility setting"
+	echo "Private: 1, Public: 2"
+	read -p "Input number: " visibility
 	read -p "Input Commit Message: " msg
 	read -p "Input Branch Name: " name
+ 
+	if [ "$visibility" = "1" ]; then
+		visibility=private
+	elif [ "$visibility" = "2" ]; then
+		visibility=public
+	else
+		exit 0
+	fi
 
+	if [ -z $msg ]; then
+		msg="first commit"
+	else
+		msg=$msg
+	fi
+
+	if [ -z $name ]; then
+		name="main"
+	else
+		name=$name
+	fi
+
+
+	gh repo create $rep --$visibility
 	echo "# $rep" >> README.md	
 	git init
 	git add README.md
@@ -353,9 +407,32 @@ echo "You are working for $hour hours and $minute minutes now."
 
 eval "$(gh completion -s bash)"
 
-hello() {
-	echo "Hello $name!"
-	sleep 1
-	echo "What's up?"
-	read action
+Mkdir() {
+	read -p"Input directory name: " mkdirname
+	mkdir $mkdirname
+	cd $_
 }
+
+eval "$(rbenv init -)"
+export PATH="$HOME/.rbenv/bin:$PATH"
+
+gdiff() {
+	git ls | while read line;
+	do
+		file=`echo $line`
+		difference=`git diff $file`
+
+		if [ "$difference" = "" ]; then
+			echo "#$file: Nothing has changed"
+			echo ""
+		else
+			echo -e "\e[31m#$file has changed\e[m"
+			hr
+			git diff $file
+			hr
+			echo ""
+		fi
+	done
+}
+
+
