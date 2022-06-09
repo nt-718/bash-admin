@@ -21,8 +21,9 @@ read -p '>>' name
 start_hour=`date +"%-H"`
 start_minute=`date +"%-M"`
 
-if [ $name == nnn ]; then
+if [ $name == nnn -o $name == nkgw ]; then
 	clear
+	echo "Welcome to the Terminal"
 else
 
 echo ""
@@ -62,8 +63,9 @@ if [ $pass == 817nk ]; then
 	echo ""
 	neofetch
 	echo ""
-	echo " Note"
-	cat /mnt/c/Users/817nk/task.txt
+	echo " 〇Todo List"
+	hr
+	cat ~/memo/todo.md
 		
 else
 	echo ""
@@ -92,7 +94,13 @@ HISTSIZE=100000
 HISTFILESIZE=100000
 HISTIGNORE='history:pwd:ls:ls *:ll:w:top:df *'      # 保存しないコマンド
 HISTCONTROL=ignoreboth                              # 空白、重複履歴を保存しない
-PROMPT_COMMAND='history -a; history -c; history -r' # 履歴のリアルタイム反映
+
+hr2() {
+	aaa=`hr`
+	echo -e "\e[37;2m$aaa\e[m"
+}
+
+PROMPT_COMMAND='history -a; history -c; history -r; hr2' # 履歴のリアルタイム反映
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -131,9 +139,9 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-# parse_git_branch() {
-#     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
-# }
+parse_git_branch() {
+    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
 
 if [ -f ~/.git-completion.bash ]; then
     source ~/.git-completion.bash
@@ -150,10 +158,19 @@ GIT_PS1_SHOWSTASHSTATE=true
 #export PS1="\u@\h \[\033[32m\]\w\[\033[33m\]\$(parse_git_branch)\[\033[00m\] $ "
 
 if [ "$color_prompt" = yes ]; then
-    #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;35m\]\u@\h\[\033[00m\]:\[\033[01;36m\]\w\n\[\033[00m\]\$ '
-    PS1="`hr`\n\[\033[01;36m\]pwd: \[\033[01;36m\]\w\[\033[34m\]\$(__git_ps1) \[\033[00m\]【\t】\n\[\033[00m\]cmd: "
 
+	if [ "$name" == nkgw ]; then
+		PS1="\[\033[01;36m\]\W\[\033[35m\] \$(bash ~/.gsta.sh)\[\033[00m\]【\t】 \[\033[00m\]\n\[\033[00m\]→ "
+		#PS1='${debian_chroot:+($debian_chroot)}\[\033[01;35m\]\u@\h\[\033[00m\]:\[\033[01;36m\]\w\n\[\033[00m\]\$ '
+	elif [ "$name" == nnn ];then
+		PS1="\[\033[01;36m\]pwd: \[\033[01;36m\]\w\[\033[34m\]\$(__git_ps1)\[\033[00m\]【\t】\n\[\033[00m\]cmd: "
+	
 	else
+		PS1="\[\033[01;36m\]$name\[\033[01;36m\] >> \[\033[01;36m\]\W\[\033[34m\]\[\033[01;34m\] \$(bash ~/.gitsta.sh)\n\[\033[00m\]▶ "
+	
+	fi
+
+else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
 unset color_prompt force_color_prompt
@@ -208,6 +225,8 @@ alias d='docker'
 alias dc='docker-compose'
 alias dcup='docker-compose up -d --build'
 alias dcbd='docker-compose build --no-cache'
+alias pbcopy='xsel --clipboard --input'
+alias Pwd='pwd | xsel --clipboard --input'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -270,7 +289,7 @@ read -p "Fetch from github? (y/N): " fetch
 	fi
 elif [ $inp == p ]; then
 
-	read -p "Enter File Name to add: " addname
+	read -e -p "Enter File Name to add: " addname
 	if [ -z "$addname" ]; then
 		git add .
 	else
@@ -299,7 +318,7 @@ read -p "Make a new repository? (y/N): " yn
 
 if [ $yn == y ]; then
 
-	read -p "Input Repository Name: " rep
+	read -e -p "Input Repository Name: " rep
 	echo "Visibility setting"
 	echo "Private: 1, Public: 2"
 	read -p "Input number: " visibility
@@ -360,6 +379,32 @@ else
 fi
 }
 
+gdiff() {
+	git ls | while read line;
+	do
+		file=`echo $line`
+		difference=`git diff $file`
+
+		if [ "$difference" = "" ]; then
+			echo "#$file: Nothing has changed"
+			echo ""
+		else
+			echo -e "\e[31m#$file has changed\e[m"
+			hr
+			git add . -N
+			git diff $file
+			hr
+			echo ""
+		fi
+	done
+}
+
+gst() {
+	gh issue list
+	hr2
+	gh pr list
+}
+
 Exit() {
 
 end_hour=`date +"%-H"`
@@ -389,26 +434,27 @@ else
 fi
 
 }
+
 WH() {
+	
+	end_hour=`date +"%-H"`
+	end_minute=`date +"%-M"`
+	if [ $end_minute -lt $start_minute ]; then
+		hour=$((end_hour-start_hour -1))
+		minute=$((end_minute-start_minute +60))
+	else
+		hour=$((end_hour-start_hour))
+		minute=$((end_minute-start_minute))
+	fi
 
-end_hour=`date +"%-H"`
-end_minute=`date +"%-M"`
-if [ $end_minute -lt $start_minute ]; then
-	hour=$((end_hour-start_hour -1))
-	minute=$((end_minute-start_minute +60))
-else
-	hour=$((end_hour-start_hour))
-	minute=$((end_minute-start_minute))
-fi
-
-echo "You are working for $hour hours and $minute minutes now."
+	echo "You are working for $hour hours and $minute minutes now."
 
 }
 
 eval "$(gh completion -s bash)"
 
 Mkdir() {
-	read -p"Input directory name: " mkdirname
+	read -p "Input directory name: " mkdirname
 	mkdir $mkdirname
 	cd $_
 }
@@ -416,23 +462,177 @@ Mkdir() {
 eval "$(rbenv init -)"
 export PATH="$HOME/.rbenv/bin:$PATH"
 
-gdiff() {
-	git ls | while read line;
-	do
-		file=`echo $line`
-		difference=`git diff $file`
-
-		if [ "$difference" = "" ]; then
-			echo "#$file: Nothing has changed"
-			echo ""
-		else
-			echo -e "\e[31m#$file has changed\e[m"
-			hr
-			git diff $file
-			hr
-			echo ""
-		fi
-	done
+todo() {
+	bat ~/memo/todo.md
 }
 
+todoe() {
+	vim ~/memo/todo.md
+}
 
+init() {
+	source ~/.bashrc
+}
+
+Rm() {
+	read -e -p"Input directory of file name: " rmname
+	read -p"Delete Permanently? (y/N): " check
+	if [ "$check" == n ]; then
+		mv "`pwd`"/"$rmname" /mnt/c/Users/817nk/backup
+	elif [ "$check" == y ]; then
+		rm -rf $rmname
+	else
+		echo "Quit."
+	fi
+}
+
+skd() {
+
+	youbi=`date +%u`
+	
+	if [ $youbi == 1 ]; then
+		echo ""
+		echo "Monday"
+		hr
+		cat ~/memo/schedule/mon.txt
+	
+	elif [ $youbi == 2 ]; then
+		echo ""
+		echo "Tuesday"
+		hr
+		cat ~/memo/schedule/tue.txt
+
+	elif [ $youbi == 3 ]; then
+		echo ""
+		echo "Wednesday"
+		hr
+		cat ~/memo/schedule/wed.txt
+    
+	elif [ $youbi == 4 ]; then
+		echo ""
+		echo "Thursday"
+		hr
+		cat ~/memo/schedule/thu.txt
+
+	elif [ $youbi == 5 ]; then
+		echo ""
+		echo "Friday"
+		hr
+		cat ~/memo/schedule/fri.txt
+
+	elif [ $youbi == 6 ]; then
+		echo ""
+		echo "Saturday"
+		hr
+		cat ~/memo/schedule/sat.txt
+
+	else
+		echo ""
+		echo "Sunday"
+		hr
+		cat ~/memo/schedule/sun.txt
+	
+	fi
+	
+}
+
+consol() {
+	read -p "Input file name: " filename
+	top=`sed -n "/<<<<<<</=" $filename`
+	middle=`sed -n "/=======/=" $filename`
+	bottom=`sed -n "/>>>>>>>/=" $filename`
+	
+	Top=("")
+	Middle=("")
+	Bottom=("")
+
+	for tp in $top; do
+		Top+=("$tp")
+	done
+
+	for md in $middle; do
+		Middle+=("$md")
+	done
+
+	for bt in $bottom; do
+		Bottom+=("$bt")
+	done
+
+	X=0
+	
+	for num in `seq 1 $((${#Top[@]}-1))`; do
+
+		echo "<<Conflict $num>>"
+
+		sed -n "$((${Top[num]} -$X)),$((${Bottom[num]} -$X)) p" $filename
+		
+		hr
+
+		echo "Input the number"
+		read -p "HEAD => 1, Other => 2: " number
+
+		if [ "$number" == 1 ]; then
+			echo "<<Details>>"
+
+			sed -n "$((${Top[num]} +1 -$X)),$((${Middle[num]} -1 -$X)) p" $filename
+			hr
+
+			read -p "Solve it? (y/N):" solve
+
+			if [ "$solve" == y ]; then
+				sed -i -e "$((${Top[num]} +1 -$X)),$((${Middle[num]} -1 -$X)) d" $filename
+				Y=$(($((${Middle[num]} -1)) - $((${Top[num]} +1)) +1))
+
+
+				hr
+
+			else
+				echo "Quit."
+
+				Y=0
+
+			fi
+
+			#echo "$Y"
+			hr
+
+		elif [ "$number" == 2 ]; then
+			echo "<<Details>>"
+
+			sed -n "$((${Middle[num]} +1 -$X)),$((${Bottom[num]} -1 -$X)) p" $filename
+			hr
+
+			read -p "Solve it? (y/N):" solve
+
+			if [ "$solve" == y ]; then
+				sed -i -e "$((${Middle[num]} +1 -$X)),$((${Bottom[num]} -1 -$X)) d" $filename
+				Y=$(($((${Bottom[num]} -1)) - $((${Middle[num]} +1)) +1))
+
+				hr
+
+			else
+				echo "Quit."
+
+				Y=0
+
+			fi
+
+			#echo "$Y"			
+
+		else
+			echo "error"
+
+		fi
+
+		X=$((X+Y))
+
+	done
+
+
+	#sed -i -e "$top s/^/# /g" $filename
+	#sed -i -e "$middle s/^/# /g" $filename
+	#sed -i -e "$bottom s/^/# /g" $filename
+
+	#sed "$(($top +1)),$(($middle -1)) d" $filename
+
+}
