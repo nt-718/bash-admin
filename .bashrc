@@ -18,12 +18,13 @@ hr() {
 
 echo "Enter Your Name:"
 read -p '>>' name
+
 start_hour=`date +"%-H"`
 start_minute=`date +"%-M"`
 
 if [ $name == nnn -o $name == nkgw ]; then
-	clear
-	echo "Welcome to the Terminal"
+        clear
+        echo "Welcome to the Terminal"
 else
 
 echo ""
@@ -39,39 +40,39 @@ clear
 
 if [ $pass == 817nk ]; then
 
-	if [ -z "$dir" ]; then
-		z 817nk
-	else
-	    z $dir
-	fi
-	if [ -z "$opt" ]; then
-		:
-	elif [ $opt == code ]; then
-		code .
-	elif [ $opt == term ]; then
-	    wt.exe -w 0 split-pane -p "ubuntu" ubuntu.exe
-	elif [ $opt == vim ]; then
-		nvim
-	elif [ $opt == pwsh ]; then
-		wt.exe -w 0 split-pane -p "powershell" pwsh.exe
-	else
-		:
-		
-	fi
+        if [ -z "$dir" ]; then
+                z 817nk
+        else
+            z $dir
+        fi
+        if [ -z "$opt" ]; then
+                :
+        elif [ $opt == code ]; then
+                code .
+        elif [ $opt == term ]; then
+            wt.exe -w 0 split-pane -p "ubuntu" ubuntu.exe
+        elif [ $opt == vim ]; then
+                nvim
+        elif [ $opt == pwsh ]; then
+                wt.exe -w 0 split-pane -p "powershell" pwsh.exe
+        else
+                :
 
-	date +"%Y/%m/%d in Tokyo"
-	echo ""
-	neofetch
-	echo ""
-	echo " 〇Todo List"
-	hr
-	cat ~/memo/todo.md
-		
+        fi
+
+        date +"%Y/%m/%d in Tokyo"
+        echo ""
+        neofetch
+        echo ""
+        echo " 〇Todo List"
+        hr
+        cat ~/memo/todo.md
+
 else
-	echo ""
-	echo -e "\e[31mERROR: INVALID PASSWORD\e[m"
-	sleep 3
-	exit
+        echo ""
+        echo -e "\e[31mERROR: INVALID PASSWORD\e[m"
+        sleep 3
+        exit
 fi
 fi
 
@@ -96,8 +97,8 @@ HISTIGNORE='history:pwd:ls:ls *:ll:w:top:df *'      # 保存しないコマン�
 HISTCONTROL=ignoreboth                              # 空白、重複履歴を保存しない
 
 hr2() {
-	aaa=`hr`
-	echo -e "\e[37;2m$aaa\e[m"
+        aaa=`hr`
+        echo -e "\e[37;2m$aaa\e[m"
 }
 
 PROMPT_COMMAND='history -a; history -c; history -r; hr2' # 履歴のリアルタイム反映
@@ -130,12 +131,12 @@ esac
 
 if [ -n "$force_color_prompt" ]; then
     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
+        # We have color support; assume it's compliant with Ecma-48
+        # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+        # a case would tend to support setf rather than setaf.)
+        color_prompt=yes
     else
-	color_prompt=
+        color_prompt=
     fi
 fi
 
@@ -159,16 +160,16 @@ GIT_PS1_SHOWSTASHSTATE=true
 
 if [ "$color_prompt" = yes ]; then
 
-	if [ "$name" == nkgw ]; then
-		PS1="\[\033[01;36m\]\W\[\033[35m\] \$(bash ~/.gsta.sh)\[\033[00m\]【\t】 \[\033[00m\]\n\[\033[00m\]→ "
-		#PS1='${debian_chroot:+($debian_chroot)}\[\033[01;35m\]\u@\h\[\033[00m\]:\[\033[01;36m\]\w\n\[\033[00m\]\$ '
-	elif [ "$name" == nnn ];then
-		PS1="\[\033[01;36m\]pwd: \[\033[01;36m\]\w\[\033[34m\]\$(__git_ps1)\[\033[00m\]【\t】\n\[\033[00m\]cmd: "
-	
-	else
-		PS1="\[\033[01;36m\]$name\[\033[01;36m\] >> \[\033[01;36m\]\W\[\033[34m\]\[\033[01;34m\] \$(bash ~/.gitsta.sh)\n\[\033[00m\]▶ "
-	
-	fi
+        if [ "$name" == nkgw ]; then
+                PS1="\[\033[01;36m\]\W\[\033[35m\] \$(bash ~/.gsta.sh)\[\033[00m\]【\t】 \[\033[00m\]\n\[\033[00m\]→ "
+                #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;35m\]\u@\h\[\033[00m\]:\[\033[01;36m\]\w\n\[\033[00m\]\$ '
+        elif [ "$name" == nnn ];then
+                PS1="\[\033[01;36m\]pwd: \[\033[01;36m\]\w\[\033[34m\]\$(__git_ps1)\[\033[00m\]【\t】\n\[\033[00m\]cmd: "
+
+        else
+                PS1="\[\033[01;36m\]$name\[\033[01;36m\] >> \[\033[01;36m\]\W\[\033[34m\]\[\033[01;34m\] \$(bash ~/.gitsta.sh)\n\[\033[00m\]▶ "
+
+        fi
 
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
@@ -178,7 +179,7 @@ unset color_prompt force_color_prompt
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
 xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+    #PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
     ;;
 *)
     ;;
@@ -227,6 +228,7 @@ alias dcup='docker-compose up -d --build'
 alias dcbd='docker-compose build --no-cache'
 alias pbcopy='xsel --clipboard --input'
 alias Pwd='pwd | xsel --clipboard --input'
+alias slct='bash ~/.selector.sh'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -267,48 +269,48 @@ read -p "Press key: " inp
 echo ""
 
 if [ -z "$inp" ]; then
-	echo "Quit."
+        echo "Quit."
 
 elif [ $inp == f ]; then
 
 read -p "Fetch from github? (y/N): " fetch
-	if [ $fetch == "y" ]; then
-		git fetch origin ${CULLENT_BRANCH};
-		git status
-		git tree
-		
-		read -p "Merge it? (y/N): " merge
+        if [ $fetch == "y" ]; then
+                git fetch origin ${CULLENT_BRANCH};
+                git status
+                git tree
 
-		if [ $merge == "y" ]; then
-			git merge origin/${CULLENT_BRANCH}
-		else
-			:
-		fi
-	else
-		exit 0
-	fi
+                read -p "Merge it? (y/N): " merge
+
+                if [ $merge == "y" ]; then
+                        git merge origin/${CULLENT_BRANCH}
+                else
+                        :
+                fi
+        else
+                exit 0
+        fi
 elif [ $inp == p ]; then
 
-	read -e -p "Enter File Name to add: " addname
-	if [ -z "$addname" ]; then
-		git add .
-	else
-		git add $addname;
-	fi
+        read -e -p "Enter File Name to add: " addname
+        if [ -z "$addname" ]; then
+                git add .
+        else
+                git add $addname;
+        fi
     git status;
     read -p "Commit with this Content? (y/N): " yesno
     case "$yesno" in
 
     [yY]*) read -p "Input Commit Message: " msg;
-		if [ -z $msg ]; then
-			git commit -m "`date +"%m%d"`"
+                if [ -z $msg ]; then
+                        git commit -m "`date +"%m%d"`"
             CULLENT_BRANCH=`git rev-parse --abbrev-ref HEAD`;
             git push origin ${CULLENT_BRANCH};
-		else
-			git commit -m "`date +"%m%d"`""_""$msg";
-			CULLENT_BRANCH=`git rev-parse --abbrev-ref HEAD`;
-			git push origin ${CULLENT_BRANCH};
-		fi;;
+                else
+                        git commit -m "`date +"%m%d"`""_""$msg";
+                        CULLENT_BRANCH=`git rev-parse --abbrev-ref HEAD`;
+                        git push origin ${CULLENT_BRANCH};
+                fi;;
     *) echo "Quit." ;;
     esac
 
@@ -318,91 +320,91 @@ read -p "Make a new repository? (y/N): " yn
 
 if [ $yn == y ]; then
 
-	read -e -p "Input Repository Name: " rep
-	echo "Visibility setting"
-	echo "Private: 1, Public: 2"
-	read -p "Input number: " visibility
-	read -p "Input Commit Message: " msg
-	read -p "Input Branch Name: " name
- 
-	if [ "$visibility" = "1" ]; then
-		visibility=private
-	elif [ "$visibility" = "2" ]; then
-		visibility=public
-	else
-		exit 0
-	fi
+        read -e -p "Input Repository Name: " rep
+        echo "Visibility setting"
+        echo "Private: 1, Public: 2"
+        read -p "Input number: " visibility
+        read -p "Input Commit Message: " msg
+        read -p "Input Branch Name: " name
 
-	if [ -z $msg ]; then
-		msg="first commit"
-	else
-		msg=$msg
-	fi
+        if [ "$visibility" = "1" ]; then
+                visibility=private
+        elif [ "$visibility" = "2" ]; then
+                visibility=public
+        else
+                exit 0
+        fi
 
-	if [ -z $name ]; then
-		name="main"
-	else
-		name=$name
-	fi
+        if [ -z $msg ]; then
+                msg="first commit"
+        else
+                msg=$msg
+        fi
+
+        if [ -z $name ]; then
+                name="main"
+        else
+                name=$name
+        fi
 
 
-	gh repo create $rep --$visibility
-	echo "# $rep" >> README.md	
-	git init
-	git add README.md
-	git commit -m "$msg"
-	git branch -M $name
-	git remote add origin git@github.com:nt-718/$rep.git
-	git push -u origin $name
+        gh repo create $rep --$visibility
+        echo "# $rep" >> README.md
+        git init
+        git add README.md
+        git commit -m "$msg"
+        git branch -M $name
+        git remote add origin git@github.com:nt-718/$rep.git
+        git push -u origin $name
 
 else
-	echo "Quit. "
+        echo "Quit. "
 fi
 elif [ $inp == s ]; then
 
-	git log --pretty=oneline
-	echo ""
-	read -p "Enter Message: " cmt
-	show=`git log --pretty=oneline --grep=$cmt | awk '{print $1}'`
-	echo ""
-	git show $show | bat -l rs
-	echo ""
-	read -p "Reset the commit? (y/N): " rst
-	if [ $rst == y ]; then
-		git reset --hard $show
-	else
-		echo "Quit. "
-	fi
+        git log --pretty=oneline
+        echo ""
+        read -p "Enter Message: " cmt
+        show=`git log --pretty=oneline --grep=$cmt | awk '{print $1}'`
+        echo ""
+        git show $show | bat -l rs
+        echo ""
+        read -p "Reset the commit? (y/N): " rst
+        if [ $rst == y ]; then
+                git reset --hard $show
+        else
+                echo "Quit. "
+        fi
 
 else
-	:
+        :
 fi
 }
 
 gdiff() {
-	git ls | while read line;
-	do
-		file=`echo $line`
-		difference=`git diff $file`
+        git ls | while read line;
+        do
+                file=`echo $line`
+                difference=`git diff $file`
 
-		if [ "$difference" = "" ]; then
-			echo "#$file: Nothing has changed"
-			echo ""
-		else
-			echo -e "\e[31m#$file has changed\e[m"
-			hr
-			git add . -N
-			git diff $file
-			hr
-			echo ""
-		fi
-	done
+                if [ "$difference" = "" ]; then
+                        echo "#$file: Nothing has changed"
+                        echo ""
+                else
+                        echo -e "\e[31m#$file has changed\e[m"
+                        hr
+                        git add . -N
+                        git diff $file
+                        hr
+                        echo ""
+                fi
+        done
 }
 
 gst() {
-	gh issue list
-	hr2
-	gh pr list
+        gh issue list
+        hr2
+        gh pr list
 }
 
 Exit() {
@@ -410,11 +412,11 @@ Exit() {
 end_hour=`date +"%-H"`
 end_minute=`date +"%-M"`
 if [ $end_minute -lt $start_minute ]; then
-	hour=$((end_hour-start_hour -1))
-	minute=$((end_minute-start_minute +60))
+        hour=$((end_hour-start_hour -1))
+        minute=$((end_minute-start_minute +60))
 else
-	hour=$((end_hour-start_hour))
-	minute=$((end_minute-start_minute))
+        hour=$((end_hour-start_hour))
+        minute=$((end_minute-start_minute))
 fi
 
 echo "$hour hours and $minute minutes has passed!"
@@ -423,216 +425,321 @@ echo ""
 
 read -p "Make a Todo List? (y/N): " td
 if [ $td == y ]; then
-	bash /mnt/c/Users/817nk/task.sh
-	read -p "Press enter key to exit." ntr
-	sleep 2
-	exit
+        bash /mnt/c/Users/817nk/task.sh
+        read -p "Press enter key to exit." ntr
+        sleep 2
+        exit
 else
-	read -p "Press enter key to exit." ntr
-	sleep 2
-	exit
+        read -p "Press enter key to exit." ntr
+        sleep 2
+        exit
 fi
 
 }
 
 WH() {
-	
-	end_hour=`date +"%-H"`
-	end_minute=`date +"%-M"`
-	if [ $end_minute -lt $start_minute ]; then
-		hour=$((end_hour-start_hour -1))
-		minute=$((end_minute-start_minute +60))
-	else
-		hour=$((end_hour-start_hour))
-		minute=$((end_minute-start_minute))
-	fi
 
-	echo "You are working for $hour hours and $minute minutes now."
+        end_hour=`date +"%-H"`
+        end_minute=`date +"%-M"`
+        if [ $end_minute -lt $start_minute ]; then
+                hour=$((end_hour-start_hour -1))
+                minute=$((end_minute-start_minute +60))
+        else
+                hour=$((end_hour-start_hour))
+                minute=$((end_minute-start_minute))
+        fi
+
+        echo "You are working for $hour hours and $minute minutes now."
 
 }
 
 eval "$(gh completion -s bash)"
 
 Mkdir() {
-	read -p "Input directory name: " mkdirname
-	mkdir $mkdirname
-	cd $_
+        read -p "Input directory name: " mkdirname
+        mkdir $mkdirname
+        cd $_
 }
 
 eval "$(rbenv init -)"
 export PATH="$HOME/.rbenv/bin:$PATH"
 
 todo() {
-	bat ~/memo/todo.md
+        bat ~/memo/todo.md
 }
 
 todoe() {
-	vim ~/memo/todo.md
+        vim ~/memo/todo.md
 }
 
 init() {
-	source ~/.bashrc
+        clear
+        source ~/.bashrc
+}
+
+note() {
+        vim ~/memo/note.txt
 }
 
 Rm() {
-	read -e -p"Input directory of file name: " rmname
-	read -p"Delete Permanently? (y/N): " check
-	if [ "$check" == n ]; then
-		mv "`pwd`"/"$rmname" /mnt/c/Users/817nk/backup
-	elif [ "$check" == y ]; then
-		rm -rf $rmname
-	else
-		echo "Quit."
-	fi
+        read -e -p"Input directory of file name: " rmname
+        read -p"Delete Permanently? (y/N): " check
+        if [ "$check" == n ]; then
+                mv "`pwd`"/"$rmname" /mnt/c/Users/817nk/backup
+        elif [ "$check" == y ]; then
+                rm -rf $rmname
+        else
+                echo "Quit."
+        fi
 }
 
 skd() {
 
-	youbi=`date +%u`
-	
-	if [ $youbi == 1 ]; then
-		echo ""
-		echo "Monday"
-		hr
-		cat ~/memo/schedule/mon.txt
-	
-	elif [ $youbi == 2 ]; then
-		echo ""
-		echo "Tuesday"
-		hr
-		cat ~/memo/schedule/tue.txt
+        youbi=`date +%u`
 
-	elif [ $youbi == 3 ]; then
-		echo ""
-		echo "Wednesday"
-		hr
-		cat ~/memo/schedule/wed.txt
-    
-	elif [ $youbi == 4 ]; then
-		echo ""
-		echo "Thursday"
-		hr
-		cat ~/memo/schedule/thu.txt
+        if [ $youbi == 1 ]; then
+                echo ""
+                echo "Monday"
+                hr
+                cat ~/memo/schedule/mon.txt
 
-	elif [ $youbi == 5 ]; then
-		echo ""
-		echo "Friday"
-		hr
-		cat ~/memo/schedule/fri.txt
+        elif [ $youbi == 2 ]; then
+                echo ""
+                echo "Tuesday"
+                hr
+                cat ~/memo/schedule/tue.txt
 
-	elif [ $youbi == 6 ]; then
-		echo ""
-		echo "Saturday"
-		hr
-		cat ~/memo/schedule/sat.txt
+        elif [ $youbi == 3 ]; then
+                echo ""
+                echo "Wednesday"
+                hr
+                cat ~/memo/schedule/wed.txt
 
-	else
-		echo ""
-		echo "Sunday"
-		hr
-		cat ~/memo/schedule/sun.txt
-	
-	fi
-	
+        elif [ $youbi == 4 ]; then
+                echo ""
+                echo "Thursday"
+                hr
+                cat ~/memo/schedule/thu.txt
+
+        elif [ $youbi == 5 ]; then
+                echo ""
+                echo "Friday"
+                hr
+                cat ~/memo/schedule/fri.txt
+
+        elif [ $youbi == 6 ]; then
+                echo ""
+                echo "Saturday"
+                hr
+                cat ~/memo/schedule/sat.txt
+
+        else
+                echo ""
+                echo "Sunday"
+                hr
+                cat ~/memo/schedule/sun.txt
+
+        fi
+
 }
 
 consol() {
-	read -p "Input file name: " filename
-	top=`sed -n "/<<<<<<</=" $filename`
-	middle=`sed -n "/=======/=" $filename`
-	bottom=`sed -n "/>>>>>>>/=" $filename`
-	
-	Top=("")
-	Middle=("")
-	Bottom=("")
+        read -e -p "Input file name: " filename
+        top=`sed -n "/<<<<<<</=" $filename`
+        middle=`sed -n "/=======/=" $filename`
+        bottom=`sed -n "/>>>>>>>/=" $filename`
 
-	for tp in $top; do
-		Top+=("$tp")
-	done
+        Top=("")
+        Middle=("")
+        Bottom=("")
 
-	for md in $middle; do
-		Middle+=("$md")
-	done
+        for tp in $top; do
+                Top+=("$tp")
+        done
 
-	for bt in $bottom; do
-		Bottom+=("$bt")
-	done
+        for md in $middle; do
+                Middle+=("$md")
+        done
 
-	X=0
-	
-	for num in `seq 1 $((${#Top[@]}-1))`; do
+        for bt in $bottom; do
+                Bottom+=("$bt")
+        done
 
-		echo "<<Conflict $num>>"
+        echo -e "\e[31m$((${#Top[@]}-1))\e[m conflicts exist"
 
-		sed -n "$((${Top[num]} -$X)),$((${Bottom[num]} -$X)) p" $filename
-		
-		hr
+        echo ""
 
-		echo "Input the number"
-		read -p "HEAD => 1, Other => 2: " number
+        X=0
 
-		if [ "$number" == 1 ]; then
-			echo "<<Details>>"
+        for num in `seq 1 $((${#Top[@]}-1))`; do
 
-			sed -n "$((${Top[num]} +1 -$X)),$((${Middle[num]} -1 -$X)) p" $filename
-			hr
+                echo -e "\e[31m<<Conflict $num>>\e[m"
+                echo ""
 
-			read -p "Solve it? (y/N):" solve
+                sed -n "$((${Top[num]} -$X)),$((${Bottom[num]} -$X)) p" $filename
 
-			if [ "$solve" == y ]; then
-				sed -i -e "$((${Top[num]} +1 -$X)),$((${Middle[num]} -1 -$X)) d" $filename
-				Y=$(($((${Middle[num]} -1)) - $((${Top[num]} +1)) +1))
+                hr
+
+                echo "Input the number"
+                read -p "HEAD => 1, Other => 2, Edit on vim => 3 " number
+
+                if [ "$number" == 1 ]; then
+
+                        echo ""
+                        echo -e "\e[31m<<Details>>\e[m"
+                        echo ""
+
+                        sed -n "$((${Top[num]} +1 -$X)),$((${Middle[num]} -1 -$X)) p" $filename
+                        hr
+
+                        read -p "Delete it? (y/N): " solve
+
+                        if [ "$solve" == y ]; then
+                                sed -i -e "$((${Top[num]} -$X)),$((${Middle[num]} -$X)) d; $((${Bottom[num]} -$X)) d" $filename
+
+                                Y=$((${Middle[num]} - ${Top[num]} +2))
+
+                        else
+                                echo "Quit."
+
+                                Y=0
+
+                        fi
+
+                        #echo "$Y"
+                        hr
+
+                elif [ "$number" == 2 ]; then
+                        echo -e "\e[31m<<Details>>\e[m"
+
+                        sed -n "$((${Middle[num]} +1 -$X)),$((${Bottom[num]} -1 -$X)) p" $filename
+                        hr
+
+                        read -p "Delete it? (y/N): " solve
+
+                        if [ "$solve" == y ]; then
+                                sed -i -e "$((${Middle[num]} -$X)),$((${Bottom[num]} -$X)) d; $((${Top[num]} -$X)) d" $filename
+
+                                Y=$((${Bottom[num]} - ${Middle[num]} +2))
+
+                        else
+                                echo "Quit."
+
+                                Y=0
+
+                        fi
+
+                        #echo "$Y"
+
+                elif [ "$number" == 3 ]; then
+                        echo -e "\e[31m※手動で修正する場合、残りのコンフリクトはconsolを実行し直す必要があります。\e[m"
+                        read -p "open vim ? (y/N): " open
+                        if [ "$open" == y ]; then
+                                vim
+                                exit 0
+                        else
+                                echo "Quit."
+                        fi
+
+                else
+                        echo "error"
+
+                fi
+
+                X=$((X+Y))
+
+        done
 
 
-				hr
+        #sed -i -e "$top s/^/# /g" $filename
+        #sed -i -e "$middle s/^/# /g" $filename
+        #sed -i -e "$bottom s/^/# /g" $filename
 
-			else
-				echo "Quit."
+        #sed "$(($top +1)),$(($middle -1)) d" $filename
 
-				Y=0
+}
 
-			fi
+theme() {
+        #read -p "Select theme: " theme
 
-			#echo "$Y"
-			hr
+        filename=/mnt/c/Users/817nk/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json
 
-		elif [ "$number" == 2 ]; then
-			echo "<<Details>>"
+        white='"colorScheme": "One Half Light",'
+        dark='"colorScheme": "Original Dark",'
 
-			sed -n "$((${Middle[num]} +1 -$X)),$((${Bottom[num]} -1 -$X)) p" $filename
-			hr
+        now=`sed -n '/"colorScheme": "One Half Light"/=' $filename`
 
-			read -p "Solve it? (y/N):" solve
-
-			if [ "$solve" == y ]; then
-				sed -i -e "$((${Middle[num]} +1 -$X)),$((${Bottom[num]} -1 -$X)) d" $filename
-				Y=$(($((${Bottom[num]} -1)) - $((${Middle[num]} +1)) +1))
-
-				hr
-
-			else
-				echo "Quit."
-
-				Y=0
-
-			fi
-
-			#echo "$Y"			
-
-		else
-			echo "error"
-
-		fi
-
-		X=$((X+Y))
-
-	done
+        if [ -z $now ]; then
 
 
-	#sed -i -e "$top s/^/# /g" $filename
-	#sed -i -e "$middle s/^/# /g" $filename
-	#sed -i -e "$bottom s/^/# /g" $filename
 
-	#sed "$(($top +1)),$(($middle -1)) d" $filename
+        #if [ "$theme" == white ]; then
 
+                line=`sed -n '/"colorScheme":/=' $filename`
+                sed -i "$line c $white" $filename
+                #sed -i '/"colorScheme": "Original Dark"/c "colorScheme": "One Half Light",' $filename
+                export PS1="\[\033[01;36m\]\W\[\033[35m\] \$(bash ~/.gsta.sh)\[\033[00m\]【\t】 \[\033[00m\]\n\[\033[00m\]→ "
+                echo -ne '\033]0;'"$1"'\a'
+                clear
+        else
+        #elif [ "$theme" == dark ]; then
+
+                line=`sed -n '/"colorScheme":/=' $filename`
+                sed -i "$line c $dark" $filename
+
+                #sed -i '/"colorScheme": "One Half Light"/c "colorScheme": "Original Dark",' $filename
+                export PS1="\[\033[01;36m\]\W\[\033[35m\] \$(bash ~/.gsta.sh)\[\033[00m\]【\t】 \[\033[00m\]\n\[\033[00m\]→ "
+                echo -ne '\033]0;'"$1"'\a'
+                clear
+
+        #else
+                #echo "Quit."
+        fi
+
+}
+
+bgi() {
+
+        read -p "Select backgroundImage: " back
+        filename=/mnt/c/Users/817nk/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json
+        line=`sed -n '/"backgroundImage": /=' $filename`
+        image1='"backgroundImage": "C:\\\\Users\\\\817nk\\\\Downloads\\\\13.jpg",'
+        image2='"backgroundImage": "C:\\\\Users\\\\817nk\\\\OneDrive\\\\画像\\\\desktop\\\\img19.jpg",'
+        image3='"backgroundImage": "C:\\\\Users\\\\817nk\\\\OneDrive\\\\画像\\\\desktop\\\\17_20220312070248.png",'
+        imageNone='// "backgroundImage": "C:\\\\Users\\\\817nk\\\\Downloads\\\\15.jpg",'
+
+        if [ -z $line ]; then
+                sed -i '52i "backgroundImage": ' $filename
+                line=`sed -n '/"backgroundImage": /=' $filename`
+
+        else
+                :
+
+        fi
+
+        if [ "$back" == 1 ]; then
+                sed -i "$line c $image1" $filename
+
+        elif [ "$back" == 2 ]; then
+                sed -i "$line c $image2" $filename
+
+        elif [ "$back" == 0 ]; then
+                sed -i "$line c $imageNone" $filename
+
+        else
+                sed -i "$line c $image3" $filename
+
+        fi
+}
+
+color() {
+        for i in `seq 30 38` `seq 40 47` ; do
+                for j in 0 1 2 4 5 7 ; do
+                        printf "\033[${j};${i}m"
+                 printf "${j};${i}"
+                        printf "\033[0;39;49m"
+                   printf " "
+                done
+                printf "\n"
+        done
 }
