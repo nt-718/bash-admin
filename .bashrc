@@ -180,7 +180,8 @@ unset color_prompt force_color_prompt
 case "$TERM" in
 xterm*|rxvt*)
     #PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
+    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\w\a\]$PS1"
+        ;;
 *)
     ;;
 esac
@@ -456,9 +457,13 @@ WH() {
 eval "$(gh completion -s bash)"
 
 Mkdir() {
-        read -p "Input directory name: " mkdirname
-        mkdir $mkdirname
-        cd $_
+        if [ -z "$1" ]; then
+                :
+        else
+
+                mkdir $1
+                cd $_
+        fi
 }
 
 eval "$(rbenv init -)"
@@ -479,6 +484,14 @@ init() {
 
 note() {
         vim ~/memo/note.txt
+}
+
+todoa() {
+        read -p "Input the task name to add: " task
+        read -p "Input the date: " date
+
+        echo "・$task $date" >> ~/memo/todo.md
+        bat ~/memo/todo.md
 }
 
 Rm() {
@@ -632,7 +645,7 @@ consol() {
                         #echo "$Y"
 
                 elif [ "$number" == 3 ]; then
-                        echo -e "\e[31m※手動で修正する場合、残りのコンフリクトはconsolを実行し直す必要があります。\e[m"
+                        echo -e "\e[31m※手動で修正する場合、残りのコンフリクトはconsolを実行し直す必 要があります。\e[m"
                         read -p "open vim ? (y/N): " open
                         if [ "$open" == y ]; then
                                 vim
@@ -680,7 +693,6 @@ theme() {
                 #sed -i '/"colorScheme": "Original Dark"/c "colorScheme": "One Half Light",' $filename
                 export PS1="\[\033[01;36m\]\W\[\033[35m\] \$(bash ~/.gsta.sh)\[\033[00m\]【\t】 \[\033[00m\]\n\[\033[00m\]→ "
                 echo -ne '\033]0;'"$1"'\a'
-                clear
         else
         #elif [ "$theme" == dark ]; then
 
@@ -690,7 +702,6 @@ theme() {
                 #sed -i '/"colorScheme": "One Half Light"/c "colorScheme": "Original Dark",' $filename
                 export PS1="\[\033[01;36m\]\W\[\033[35m\] \$(bash ~/.gsta.sh)\[\033[00m\]【\t】 \[\033[00m\]\n\[\033[00m\]→ "
                 echo -ne '\033]0;'"$1"'\a'
-                clear
 
         #else
                 #echo "Quit."
@@ -742,4 +753,65 @@ color() {
                 done
                 printf "\n"
         done
+}
+
+
+zz() {
+
+        if [ "$1" == -o ]; then
+                vim ~/zzz.txt
+        elif [ -z "$1" ]; then
+                pwd >> ~/zzz.txt
+        else
+                zzz=`tac ~/zzz.txt | grep -m1 $1`
+                if [ -z $zzz ]; then
+                        echo "No such directory"
+                else
+                        cd $zzz
+                fi
+        fi
+}
+
+
+google() {
+    url='https://google.co.jp/search?q='
+    for t;
+    do
+        url="${url}${t}+"
+    done
+    echo $url
+        "/mnt/c/Program Files (x86)/Google/Chrome/Application/chrome.exe" $url
+}
+
+youtube() {
+        url2='https://www.youtube.com/results?search_query='
+    url1='https://www.youtube.com'
+        if [ -z $1 ]; then
+                echo $url1
+                "/mnt/c/Program Files (x86)/Google/Chrome/Application/chrome.exe" $url1
+        else
+                for t;
+                do
+                        url2="${url2}${t}+"
+                done
+                echo $url2
+                "/mnt/c/Program Files (x86)/Google/Chrome/Application/chrome.exe" $url2
+
+        fi
+}
+
+wiki() {
+        url='https://ja.wikipedia.org/wiki/'
+    for t;
+    do
+        url="${url}${t}"
+    done
+    echo $url
+        "/mnt/c/Program Files (x86)/Google/Chrome/Application/chrome.exe" $url
+}
+
+github() {
+        url='https://github.com/'
+    echo $url
+        "/mnt/c/Program Files (x86)/Google/Chrome/Application/chrome.exe" $url
 }
