@@ -1,6 +1,7 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
+export GITHUB_TOKEN="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"
 
 echo ""
 echo "Hello, Terminal!"
@@ -25,6 +26,11 @@ start_minute=`date +"%-M"`
 if [ $name == nnn -o $name == nkgw ]; then
         clear
         echo "Welcome to the Terminal"
+
+elif [ $name == vim ]; then
+        clear
+        vim ~
+
 else
 
 echo ""
@@ -64,9 +70,7 @@ if [ $pass == 817nk ]; then
         echo ""
         neofetch
         echo ""
-        echo " 〇Todo List"
-        hr
-        cat ~/memo/todo.md
+
 
 else
         echo ""
@@ -93,15 +97,47 @@ shopt -s histappend
 HISTTIMEFORMAT='%F %T '
 HISTSIZE=100000
 HISTFILESIZE=100000
-HISTIGNORE='history:pwd:ls:ls *:ll:w:top:df *'      # 保存しないコマンド
-HISTCONTROL=ignoreboth                              # 空白、重複履歴を保存しない
+HISTIGNORE='history:pwd:ls:ls *:ll:w:top:df *'
+HISTCONTROL=ignoreboth
 
 hr2() {
         aaa=`hr`
         echo -e "\e[37;2m$aaa\e[m"
 }
 
-PROMPT_COMMAND='history -a; history -c; history -r; hr2' # 履歴のリアルタイム反映
+PROMPT_COMMAND='history -a; history -c; history -r; hr2 '
+
+cmd_count() {
+  if [ -z "$i" ]; then
+    let i=10
+  fi
+  let i--
+  echo "command count: $i"
+
+  if [ $i == 0 ]; then
+          echo "GAMEOVER"
+          for I in {1..10}; do
+                  sleep 0.5
+                  BAR="$(yes . | head -n ${I} | tr -d '\n')"
+                  printf "\r[%3d/100] %s" $((I * 10)) ${BAR}
+          done
+          printf "\n"1
+          exit
+  fi
+}
+
+cmd_cnt() {
+  if [ -z "$i" ]; then
+    let i=-1
+  fi
+  let i++
+
+  if [ $i == 0 ]; then
+          :
+  else
+        echo "Command Count: $i"
+  fi
+}
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -158,16 +194,203 @@ GIT_PS1_SHOWSTASHSTATE=true
 
 #export PS1="\u@\h \[\033[32m\]\w\[\033[33m\]\$(parse_git_branch)\[\033[00m\] $ "
 
-if [ "$color_prompt" = yes ]; then
 
-        if [ "$name" == nkgw ]; then
-                PS1="\[\033[01;36m\]\W\[\033[35m\] \$(bash ~/.gsta.sh)\[\033[00m\]【\t】 \[\033[00m\]\n\[\033[00m\]→ "
-                #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;35m\]\u@\h\[\033[00m\]:\[\033[01;36m\]\w\n\[\033[00m\]\$ '
-        elif [ "$name" == nnn ];then
-                PS1="\[\033[01;36m\]pwd: \[\033[01;36m\]\w\[\033[34m\]\$(__git_ps1)\[\033[00m\]【\t】\n\[\033[00m\]cmd: "
+####################################################################################
+
+prompt() {
+
+
+CURRENT=$(pwd)
+#echo $CURRENT
+
+DIR_NAME=`echo "$CURRENT" | sed -e 's/.*\/\([^\/]*\)$/\1/'`
+
+if [[ "$DIR_NAME" == "nkgw817" ]]; then
+        DIR_NAME="~"
+else
+        :
+fi
+
+
+columns=$(tput cols)
+
+brank=("")
+
+#version section
+
+
+cwd=`pwd`
+
+if [[ "$cwd" == /home/nkgw817 ]]; then
+        ver=""
+else
+        filep=`ls | grep -F .py`
+        filen=`ls | grep -F node_modules`
+        fileg=`ls | grep -F main.go`
+        filer=`ls | grep -F Gemfile`
+        filev=`ls | grep -F .vim`
+        files=`ls | grep -F .sh`
+        filerust=`ls | grep -F .rs`
+
+        ver=""
+
+        if [[ -z "$files" ]]; then
+                :
+        else
+                #ver=`go version | awk '{print $3}'`
+                ver="bash:5.0.17"
+
+        fi
+        if [[ -z "$filev" ]]; then
+                :
+        else
+                #ver=`go version | awk '{print $3}'`
+                ver="Nvim:0.6.1"
+
+        fi
+
+        if [[ -z "$filep" ]]; then
+                :
+        else
+                #ver=`python3 --version | awk '{print $2}'`
+                ver="Python:3.8.10"
+
+        fi
+
+        if [[ -z "$filen" ]]; then
+                :
+        else
+                #ver=`node --version | awk '{print $1}'`
+                ver="node:16.14.1"
+        fi
+
+        if [[ -z "$fileg" ]]; then
+                :
+        else
+                #ver=`go version | awk '{print $3}'`
+                ver="Go:1.18.3"
+
+        fi
+
+        if [[ -z "$filer" ]]; then
+                :
+        else
+                #ver=`go version | awk '{print $3}'`
+                ver="Rails:7.0.3"
+
+        fi
+
+        if [[ -z "$filerust" ]]; then
+                :
+        else
+                ver="Rust:1.62.0"
+        fi
+
+fi
+
+#git branch section
+
+if [[ "`echo "$(pwd)" | grep "/mnt"`" ]]; then
+
+        parse_git_branch() {
+                git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+        }
+        git=$(parse_git_branch)
+        gitt=""
+
+else
+        branch=`echo "$(__git_ps1)" | cut -d"(" -f2 | cut -d")" -f1 | cut -d" " -f1`
+
+        if [[ "`echo "$(__git_ps1)"`" == "" ]]; then
+                git=""
+                gitt=""
 
         else
-                PS1="\[\033[01;36m\]$name\[\033[01;36m\] >> \[\033[01;36m\]\W\[\033[34m\]\[\033[01;34m\] \$(bash ~/.gitsta.sh)\n\[\033[00m\]▶ "
+                bbb=0
+                for file in `git add -n .`;
+
+                do
+
+                        bbb=$(($bbb + 1))
+
+                done
+                if [[ $bbb == 0 ]]; then
+                        bbb=""
+                else
+                        bbb="+$(($bbb / 2))"
+
+                fi
+
+                if [[ "`echo "$(__git_ps1)" | grep "%"`" ]]; then
+                        git="at $branch (untracked) $bbb "
+
+                elif [[ "`echo "$(__git_ps1)" | grep "*"`" ]]; then
+                        git="at $branch (unstaged) $bbb "
+
+                elif [[ "`echo "$(__git_ps1)" | grep "+"`" ]]; then
+                        git="at $branch (uncommited) $bbb "
+
+                else
+                        git="at $branch "
+
+                fi
+                gitt=""
+        fi
+
+fi
+
+
+
+# battery section
+
+ppp=`acpi | awk '{print $4}' | cut -f 1 -d "%"`
+charge=`acpi | awk '{print $3}'`
+if [[ "$charge" == Discharging, ]]; then
+        battery="🍎$ppp%"
+else
+        battery="🍏$ppp%"
+fi
+
+#blank section
+
+job="$(jobscount)"
+
+for i in `seq 1 $(( $columns - ${#DIR_NAME} - ${#job} - ${#ver} - ${#git} - ${#battery} -15 ))`; do
+        brank+=("")
+
+done
+
+#echo section
+
+echo -e "\e[33m$git\e[m${brank[@]}$gitt \e[01;30m$ver $battery $job \e[m"
+
+
+}
+
+
+####################################################################################
+
+
+jobscount() {
+  set -- $(jobs -rp)
+  set $# $(jobs -sp)
+  set $1 $(($#-1))
+  if [[ $1 -ne 0 ]] || [[ $2 -ne 0 ]]; then echo "${1}r/${2}s"; fi
+}
+
+
+if [ "$color_prompt" = yes ]; then
+
+        if [ "$name" == nkgw -o "$name" == vim ]; then
+                #PS1="\[\033[01;36m\]\W\[\033[35m\] \$(bash ~/.gsta.sh)\[\033[00m\]【\t】 \[\033[00m\]\n\[\033[00m\]→ "
+                #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;35m\]\u@\h\[\033[00m\]:\[\033[01;36m\]\w\n\[\033[00m\]\$ '
+                PS1="\[\033[01;36m\]\W \[\033[01;30m\]\$(prompt)\[\033[01;30m\]\t \[\033[00m\]\n\[\033[00m\]→ "
+
+        elif [ "$name" == nnn ];then
+                #PS1="\[\033[01;36m\]pwd: \[\033[01;36m\]\w\[\033[34m\]\$(__git_ps1)\[\033[00m\] 【\t】\n\[\033[00m\]cmd: "
+                PS1="\[\033[01;36m\]\W\[\033[35m\]\$(__git_ps1)\[\033[00m\]【\t】 \[\033[00m\]\n\[\033[00m\]→ "
+        else
+                PS1="\[\033[01;36m\]\W\[\033[35m\] \$(bash ~/.gsta.sh)\[\033[00m\]\$(bash ~/ver.sh) \$(bash ~/battery.sh) \t \[\033[00m\]\n\[\033[00m\]→ "
 
         fi
 
@@ -215,7 +438,7 @@ alias ccc='cmatrix -C cyan'
 alias nf='neofetch'
 alias cron='bash /mnt/c/Users/817nk/cron-master.sh'
 alias backup='bash /mnt/c/Users/817nk/backup.sh'
-alias cl='clear'
+#alias cl='clear'
 alias rmd='rm -rf'
 alias g='git'
 alias weather='curl wttr.in/Tokyo'
@@ -230,6 +453,14 @@ alias dcbd='docker-compose build --no-cache'
 alias pbcopy='xsel --clipboard --input'
 alias Pwd='pwd | xsel --clipboard --input'
 alias slct='bash ~/.selector.sh'
+alias python='python3'
+alias norehat='vim ~/memo/noreha.txt'
+#alias ls='(ls -a; hr2) > /dev/pts/2'
+#alias hello='echo "Hello World!" > /dev/pts/2'
+#alias cl='clear > /dev/pts/2'
+alias word='/mnt/c/Program\ Files/Microsoft\ Office/root/Office16/WINWORD.EXE'
+alias excel='/mnt/c/Program\ Files/Microsoft\ Office/root/Office16/EXCEL.EXE'
+
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -645,7 +876,7 @@ consol() {
                         #echo "$Y"
 
                 elif [ "$number" == 3 ]; then
-                        echo -e "\e[31m※手動で修正する場合、残りのコンフリクトはconsolを実行し直す必 要があります。\e[m"
+                        echo -e "\e[31m※手動で修正する場合、残りのコンフリクトはconsolを実行し直 す必要があります。\e[m"
                         read -p "open vim ? (y/N): " open
                         if [ "$open" == y ]; then
                                 vim
@@ -691,8 +922,8 @@ theme() {
                 line=`sed -n '/"colorScheme":/=' $filename`
                 sed -i "$line c $white" $filename
                 #sed -i '/"colorScheme": "Original Dark"/c "colorScheme": "One Half Light",' $filename
-                export PS1="\[\033[01;36m\]\W\[\033[35m\] \$(bash ~/.gsta.sh)\[\033[00m\]【\t】 \[\033[00m\]\n\[\033[00m\]→ "
-                echo -ne '\033]0;'"$1"'\a'
+                #export PS1="\[\033[01;36m\]\W\[\033[35m\] \$(bash ~/.gsta.sh)\[\033[00m\]【\t】 \[\033[00m\]\n\[\033[00m\]→ "
+                #echo -ne '\033]0;'"$1"'\a'
         else
         #elif [ "$theme" == dark ]; then
 
@@ -700,8 +931,8 @@ theme() {
                 sed -i "$line c $dark" $filename
 
                 #sed -i '/"colorScheme": "One Half Light"/c "colorScheme": "Original Dark",' $filename
-                export PS1="\[\033[01;36m\]\W\[\033[35m\] \$(bash ~/.gsta.sh)\[\033[00m\]【\t】 \[\033[00m\]\n\[\033[00m\]→ "
-                echo -ne '\033]0;'"$1"'\a'
+                #export PS1="\[\033[01;36m\]\W\[\033[35m\] \$(bash ~/.gsta.sh)\[\033[00m\]【\t】 \[\033[00m\]\n\[\033[00m\]→ "
+                #echo -ne '\033]0;'"$1"'\a'
 
         #else
                 #echo "Quit."
@@ -756,18 +987,42 @@ color() {
 }
 
 
-zz() {
 
-        if [ "$1" == -o ]; then
+j() {
+
+        CURRENT=$(pwd)
+
+        if [[ -z "$1" ]]; then
+
+                check=`cat ~/zzz.txt | grep -x $CURRENT`
+
+                if [[ -z "$check" ]]; then
+
+                        echo "$CURRENT" >> ~/zzz.txt
+                fi
+
+        elif [[ "$1" == -e ]]; then
                 vim ~/zzz.txt
-        elif [ -z "$1" ]; then
-                pwd >> ~/zzz.txt
+
+        elif [[ "$1" == -s ]]; then
+
+                PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'j'
+
         else
-                zzz=`tac ~/zzz.txt | grep -m1 $1`
-                if [ -z $zzz ]; then
-                        echo "No such directory"
+
+                while read line
+        do
+                #lineforgrep=${line,,}
+                DIR_NAME=`echo "$line" | grep "$1" | sed -e 's/.*\/\([^\/]*\)$/\1/'`
+
+                [[ "$DIR_NAME" =~ "$1" ]] && break
+
+        done < ~/zzz.txt
+
+                if [[ -z "$line" ]]; then
+                        echo "No such a directory"
                 else
-                        cd $zzz
+                        cd "$line"
                 fi
         fi
 }
@@ -781,6 +1036,7 @@ google() {
     done
     echo $url
         "/mnt/c/Program Files (x86)/Google/Chrome/Application/chrome.exe" $url
+        :
 }
 
 youtube() {
@@ -789,6 +1045,7 @@ youtube() {
         if [ -z $1 ]; then
                 echo $url1
                 "/mnt/c/Program Files (x86)/Google/Chrome/Application/chrome.exe" $url1
+                :
         else
                 for t;
                 do
@@ -796,7 +1053,7 @@ youtube() {
                 done
                 echo $url2
                 "/mnt/c/Program Files (x86)/Google/Chrome/Application/chrome.exe" $url2
-
+                :
         fi
 }
 
@@ -808,10 +1065,80 @@ wiki() {
     done
     echo $url
         "/mnt/c/Program Files (x86)/Google/Chrome/Application/chrome.exe" $url
+        :
 }
 
 github() {
         url='https://github.com/'
     echo $url
         "/mnt/c/Program Files (x86)/Google/Chrome/Application/chrome.exe" $url
+        :
 }
+
+refere() {
+        read -p "Input the title: " title
+        read -p "Input the URL: " content
+
+        echo "・$title" >> ~/URL.txt
+        echo "$content" >> ~/URL.txt
+        echo "" >> ~/URL.txt
+
+        echo ""
+
+        echo "~/URL.txt"
+        hr2
+        cat ~/URL.txt
+}
+
+rfr() {
+        read -p "Input the title: " title
+        hit=`grep $title ~/URL.txt`
+        echo "$hit"
+}
+
+title() {
+        ls
+        echo ""
+        python3 ~/dev/python/Scraping/main.py
+}
+
+ccd() {
+        if [ $1 == 2 ]; then
+                cd ../../
+
+        elif [ $1 == 3 ]; then
+                cd ../../../
+
+        elif [ $1 == 4 ]; then
+                cd ../../../../
+        else
+                :
+        fi
+
+
+}
+
+hello() {
+        #array=("H" "E" "L" "O")
+        array=("🍞" "🥖" "🥐" "🥞" "🧇" "🥪" "🍩" "🧋" "🍦" "🥨")
+        HELLO=`echo "${array[$(($RANDOM % ${#array[*]}))]} ${array[$(($RANDOM % ${#array[*]}))]} ${array[$(($RANDOM % ${#array[*]}))]}"`
+
+
+        if [ "$HELLO" == "🍞 🍞 🍞" -o "$HELLO" == "🥖 🥖 🥖" -o "$HELLO" == "🥐 🥐 🥐" -o "$HELLO" == "🥞 🥞 🥞" -o "$HELLO" == "🧇 🧇 🧇" -o "$HELLO" == "🥪 🥪 🥪" -o "$HELLO" == "🍩 🍩 🍩" -o "$HELLO" == "🧋 🧋 🧋" -o "$HELLO" == "🍦 🍦 🍦" -o "$HELLO" == "🥨 🥨 🥨" ]; then
+                echo "Delisious! $HELLO"
+
+        else
+                echo $HELLO
+        fi
+
+}
+
+cl() {
+        clear
+
+}
+. "$HOME/.cargo/env"
+
+source /home/nkgw817/.config/broot/launcher/bash/br
+
+export EDITOR=nvim
